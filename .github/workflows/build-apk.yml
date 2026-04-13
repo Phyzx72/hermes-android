@@ -19,7 +19,8 @@ jobs:
         working-directory: hermes-android-bridge
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          chmod +x gradlew
+          gradle wrapper
+          chmod +x gradlewg
           ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
