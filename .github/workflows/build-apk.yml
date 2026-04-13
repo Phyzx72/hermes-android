@@ -15,12 +15,16 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Install SDK components
         run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
-      - uses: gradle/actions/setup-gradle@v4
       - name: Build APK
         working-directory: hermes-android-bridge
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          gradle assembleDebug
+          mkdir -p gradle/wrapper
+          curl -sL https://services.gradle.org/distributions/gradle-8.6-bin.zip -o gradle.zip
+          unzip -q gradle.zip
+          ./gradle-8.6/bin/gradle wrapper
+          chmod +x gradlew
+          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: hermes-bridge-apk
