@@ -1,0 +1,27 @@
+name: Build Hermes Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - name: Install SDK components
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+      - name: Build APK
+        working-directory: hermes-android-bridge
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hermes-bridge-apk
+          path: hermes-android-bridge/app/build/outputs/apk/debug/app-debug.apk
